@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Brantheo — Your Digital Future</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & VARS ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --p:    #8300E9;
+  --pm:   #4B41E4;
+  --ind:  #191158;
+  --dp:   #0D0826;
+  --bg:   #080617;
+  --w:    #ffffff;
+  --g:    rgba(255,255,255,0.5);
+  --gs:   rgba(255,255,255,0.12);
+  --glow: 0 0 60px rgba(131,0,233,0.25);
+}
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+body { font-family: 'DM Sans', sans-serif; color: var(--w); cursor: default; }
+
+/* ── CANVAS BG ── */
+#bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* ── SCREENS ── */
+.screen {
+  position: fixed; inset: 0; z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 48px 32px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.screen.active { opacity: 1; pointer-events: all; }
+.screen.exit { opacity: 0; pointer-events: none; }
+
+/* ── SCREEN: WELCOME ── */
+#s-welcome { text-align: center; }
+.brand-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  border: 1px solid rgba(131,0,233,0.4);
+  background: rgba(131,0,233,0.08);
+  backdrop-filter: blur(10px);
+  padding: 8px 20px; border-radius: 50px;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 3px;
+  text-transform: uppercase; color: rgba(255,255,255,0.7);
+  margin-bottom: 40px;
+}
+.brand-badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--p); animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(0.7)} }
+
+.welcome-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(3rem, 10vw, 6.5rem);
+  font-weight: 700; line-height: 1;
+  letter-spacing: -2px;
+  margin-bottom: 20px;
+}
+.welcome-title .line2 { color: var(--p); font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
+
+.welcome-sub { font-size: clamp(0.95rem, 2.5vw, 1.15rem); color: var(--g); max-width: 460px; line-height: 1.7; margin-bottom: 52px; }
+
+.btn-start {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--p); color: var(--w);
+  padding: 18px 44px; border-radius: 100px;
+  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 1rem;
+  border: none; cursor: pointer;
+  box-shadow: 0 0 40px rgba(131,0,233,0.4);
+  transition: transform .2s, box-shadow .2s;
+  letter-spacing: 0.3px;
+}
+.btn-start:hover { transform: scale(1.04); box-shadow: 0 0 60px rgba(131,0,233,0.6); }
+.btn-start svg { transition: transform .2s; }
+.btn-start:hover svg { transform: translateX(4px); }
+
+/* ── SCREEN: INPUT ── */
+#s-name, #s-company, #s-phone { text-align: center; }
+
+.input-eyebrow { font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; color: var(--p); font-weight: 600; margin-bottom: 24px; }
+.input-question {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(1.8rem, 6vw, 3.5rem);
+  font-weight: 600; letter-spacing: -1px;
+  line-height: 1.15; margin-bottom: 12px;
+}
+.input-question .dynamic { color: var(--p); font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
+.input-hint { font-size: 0.88rem; color: var(--g); margin-bottom: 48px; }
+
+.fancy-input-wrap { position: relative; width: min(500px, 90vw); margin: 0 auto 32px; }
+.fancy-input {
+  width: 100%; background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 16px; padding: 20px 24px;
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.4rem; font-weight: 500;
+  color: var(--w); outline: none;
+  transition: border-color .3s, box-shadow .3s, background .3s;
+  text-align: center; letter-spacing: -0.5px;
+  caret-color: var(--p);
+}
+.fancy-input:focus {
+  border-color: var(--p);
+  box-shadow: 0 0 0 4px rgba(131,0,233,0.15), 0 0 30px rgba(131,0,233,0.2);
+  background: rgba(131,0,233,0.06);
+}
+.fancy-input::placeholder { color: rgba(255,255,255,0.2); }
+
+.btn-next {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: transparent; border: 1.5px solid rgba(255,255,255,0.2);
+  color: var(--w); padding: 14px 36px; border-radius: 100px;
+  font-size: 0.95rem; font-weight: 500; cursor: pointer;
+  transition: all .25s; letter-spacing: 0.3px;
+}
+.btn-next:hover, .btn-next.ready { background: var(--p); border-color: var(--p); box-shadow: 0 0 30px rgba(131,0,233,0.4); }
+.skip-link { font-size: 0.78rem; color: rgba(255,255,255,0.3); margin-top: 16px; cursor: pointer; text-decoration: underline; }
+.skip-link:hover { color: rgba(255,255,255,0.6); }
+
+/* ── SCREEN: PITCH DECK ── */
+#s-pitch { padding: 0; align-items: stretch; justify-content: flex-start; overflow: hidden; }
+
+.deck-nav {
+  position: fixed; top: 24px; left: 0; right: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; pointer-events: none; opacity: 0;
+  transition: opacity .5s;
+}
+.deck-nav.visible { opacity: 1; pointer-events: all; }
+.deck-logo { font-family: 'Clash Display', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 4px; }
+.deck-progress { display: flex; gap: 6px; }
+.deck-dot { width: 24px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.2); transition: background .4s, width .4s; }
+.deck-dot.active { background: var(--p); width: 32px; }
+.deck-exit { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.5); padding: 6px 16px; border-radius: 50px; font-size: 0.75rem; cursor: pointer; transition: all .2s; }
+.deck-exit:hover { background: rgba(255,255,255,0.14); color: var(--w); }
+
+.slides-container {
+  width: 100%; height: 100vh;
+  overflow-y: scroll; scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+.slides-container::-webkit-scrollbar { display: none; }
+
+.slide {
+  width: 100%; height: 100vh;
+  scroll-snap-align: start;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 100px 48px 80px;
+  position: relative; overflow: hidden;
+}
+
+/* SLIDE 1 — Problem / Hook */
+.slide-1 { background: var(--bg); }
+.slide-eyebrow { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: var(--p); font-weight: 700; margin-bottom: 20px; }
+.slide-headline {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(2.2rem, 7vw, 5rem);
+  font-weight: 700; letter-spacing: -1.5px;
+  line-height: 1.05; text-align: center;
+  margin-bottom: 24px; max-width: 860px;
+}
+.slide-headline .name-tag { color: var(--p); }
+.slide-headline em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,0.7); }
+.slide-body { font-size: clamp(0.95rem, 2vw, 1.15rem); color: var(--g); text-align: center; max-width: 580px; line-height: 1.75; margin-bottom: 48px; }
+.slide-body .co-tag { color: var(--w); font-weight: 600; }
+
+.pain-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px; width: min(820px, 100%); margin-bottom: 40px;
+}
+.pain-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px; padding: 24px 20px;
+  transition: border-color .3s, background .3s;
+}
+.pain-card:hover { border-color: rgba(131,0,233,0.4); background: rgba(131,0,233,0.06); }
+.pain-icon { font-size: 1.8rem; margin-bottom: 12px; display: block; }
+.pain-card h4 { font-family: 'Clash Display', sans-serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; }
+.pain-card p { font-size: 0.8rem; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+.scroll-hint { display: flex; flex-direction: column; align-items: center; gap: 8px; color: rgba(255,255,255,0.3); font-size: 0.75rem; animation: bounce-y 2s infinite; }
+@keyframes bounce-y { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+.scroll-arrow { width: 20px; height: 20px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); }
+
+/* SLIDE 2 — Products */
+.slide-2 { background: linear-gradient(160deg, var(--ind) 0%, var(--dp) 100%); }
+.products-label { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: var(--p); font-weight: 700; margin-bottom: 16px; }
+.products-headline {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  font-weight: 700; letter-spacing: -1px;
+  text-align: center; margin-bottom: 8px;
+}
+.products-sub { color: var(--g); font-size: 0.95rem; margin-bottom: 40px; text-align: center; }
+
+.product-cards { display: flex; flex-direction: column; gap: 14px; width: min(700px, 100%); }
+.product-card {
+  display: flex; align-items: center; gap: 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(131,0,233,0.2);
+  border-radius: 16px; padding: 22px 24px;
+  transition: all .3s; cursor: default;
+}
+.product-card:hover { background: rgba(131,0,233,0.1); border-color: rgba(131,0,233,0.5); transform: translateX(4px); }
+.pc-num { font-family: 'Clash Display', sans-serif; font-size: 2rem; font-weight: 700; color: rgba(131,0,233,0.3); line-height: 1; min-width: 48px; }
+.pc-body { flex: 1; }
+.pc-name { font-family: 'Clash Display', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
+.pc-desc { font-size: 0.83rem; color: rgba(255,255,255,0.45); line-height: 1.5; }
+.pc-badge { background: rgba(131,0,233,0.2); border: 1px solid rgba(131,0,233,0.4); color: rgba(255,255,255,0.8); padding: 4px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; white-space: nowrap; }
+
+/* SLIDE 3 — Deep dive co-specific */
+.slide-3 { background: var(--bg); }
+.impact-label { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: var(--p); font-weight: 700; margin-bottom: 20px; }
+.impact-headline {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(1.8rem, 5vw, 3.8rem);
+  font-weight: 700; letter-spacing: -1px;
+  text-align: center; line-height: 1.1; margin-bottom: 12px;
+}
+.impact-sub { color: var(--g); font-size: 0.95rem; margin-bottom: 40px; text-align: center; max-width: 560px; }
+
+.stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; width: min(700px,100%); margin-bottom: 32px; }
+.stat-box {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(131,0,233,0.2);
+  border-radius: 16px; padding: 24px 16px; text-align: center;
+}
+.stat-val { font-family: 'Clash Display', sans-serif; font-size: 2.8rem; font-weight: 700; color: var(--p); line-height: 1; margin-bottom: 6px; }
+.stat-lbl { font-size: 0.78rem; color: rgba(255,255,255,0.5); line-height: 1.4; }
+
+.quote-block {
+  width: min(700px,100%);
+  border-left: 3px solid var(--p);
+  padding: 20px 24px;
+  background: rgba(131,0,233,0.06);
+  border-radius: 0 12px 12px 0;
+}
+.quote-block p { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 1.05rem; color: rgba(255,255,255,0.7); line-height: 1.65; }
+.quote-block .co-q { color: var(--w); font-style: normal; font-weight: 600; }
+
+/* SLIDE 4 — CTA phone */
+.slide-4 { background: linear-gradient(160deg, var(--ind) 0%, var(--dp) 100%); }
+.cta-eyebrow { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: var(--p); font-weight: 700; margin-bottom: 20px; }
+.cta-headline {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(2rem, 6vw, 4.2rem);
+  font-weight: 700; letter-spacing: -1.5px;
+  text-align: center; line-height: 1.08; margin-bottom: 16px;
+}
+.cta-headline .name-c { color: var(--p); }
+.cta-sub { color: var(--g); font-size: 1rem; margin-bottom: 44px; text-align: center; max-width: 500px; line-height: 1.65; }
+
+.phone-form { display: flex; flex-direction: column; align-items: center; gap: 12px; width: min(460px,90vw); }
+.phone-label { font-size: 0.78rem; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
+.phone-input {
+  width: 100%; background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 14px; padding: 18px 22px;
+  font-family: 'Clash Display', sans-serif; font-size: 1.3rem;
+  font-weight: 500; color: var(--w); outline: none; text-align: center;
+  caret-color: var(--p); letter-spacing: 1px;
+  transition: border-color .3s, box-shadow .3s, background .3s;
+}
+.phone-input:focus { border-color: var(--p); box-shadow: 0 0 0 4px rgba(131,0,233,0.15); background: rgba(131,0,233,0.06); }
+.phone-input::placeholder { color: rgba(255,255,255,0.2); font-size: 1rem; }
+
+.btn-send {
+  width: 100%; background: var(--p); color: var(--w);
+  border: none; border-radius: 14px; padding: 18px;
+  font-family: 'Clash Display', sans-serif; font-size: 1.1rem;
+  font-weight: 600; cursor: pointer; letter-spacing: 0.3px;
+  box-shadow: 0 0 40px rgba(131,0,233,0.35);
+  transition: transform .2s, box-shadow .2s, opacity .2s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.btn-send:hover { transform: scale(1.02); box-shadow: 0 0 60px rgba(131,0,233,0.55); }
+.btn-send:active { transform: scale(0.98); }
+.btn-send.loading { opacity: 0.7; pointer-events: none; }
+
+.skip-cta { font-size: 0.78rem; color: rgba(255,255,255,0.25); cursor: pointer; text-decoration: underline; }
+.skip-cta:hover { color: rgba(255,255,255,0.5); }
+
+/* ── SCREEN: SUCCESS ── */
+#s-success { text-align: center; }
+.success-ring {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(131,0,233,0.15);
+  border: 1.5px solid rgba(131,0,233,0.4);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 32px;
+  animation: ring-pulse 2s infinite;
+}
+@keyframes ring-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(131,0,233,0.3)} 50%{box-shadow:0 0 0 16px rgba(131,0,233,0)} }
+.success-check { font-size: 2.2rem; }
+.success-headline { font-family: 'Clash Display', sans-serif; font-size: clamp(2rem, 7vw, 4rem); font-weight: 700; letter-spacing: -1px; margin-bottom: 16px; }
+.success-headline span { color: var(--p); }
+.success-body { color: var(--g); font-size: 1rem; max-width: 420px; line-height: 1.7; margin-bottom: 40px; }
+.success-detail {
+  display: flex; gap: 12px; align-items: center;
+  background: rgba(131,0,233,0.08); border: 1px solid rgba(131,0,233,0.2);
+  border-radius: 12px; padding: 16px 24px;
+  font-size: 0.88rem; color: rgba(255,255,255,0.6);
+  margin-bottom: 12px;
+}
+.success-detail .ico { font-size: 1.2rem; }
+.success-detail strong { color: var(--w); }
+.success-brantheo { font-size: 0.72rem; letter-spacing: 3px; color: rgba(255,255,255,0.2); text-transform: uppercase; margin-top: 32px; }
+
+/* ── TRANSITION OVERLAY ── */
+#transition-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--p);
+  transform: scaleY(0); transform-origin: top;
+  transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+  pointer-events: none;
+}
+#transition-overlay.enter { transform: scaleY(1); transform-origin: top; }
+#transition-overlay.exit { transform: scaleY(0); transform-origin: bottom; }
+
+/* ── NOISE TEXTURE ── */
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; opacity: 0.4;
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div id="transition-overlay"></div>
+
+<!-- SCREEN 0: WELCOME -->
+<div class="screen active" id="s-welcome">
+  <div class="brand-badge">Brantheo · AI Marketing</div>
+  <h1 class="welcome-title">
+    The Future<br>
+    <span class="line2">is already here.</span>
+  </h1>
+  <p class="welcome-sub">We built something just for you. A personalized experience to show exactly how AI automation can transform your business — in the next 3 minutes.</p>
+  <button class="btn-start" onclick="goTo('s-name')">
+    Let's start
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </button>
+</div>
+
+<!-- SCREEN 1: NAME -->
+<div class="screen" id="s-name">
+  <div class="input-eyebrow">Step 1 of 3</div>
+  <h2 class="input-question">What's your<br><span class="dynamic">name?</span></h2>
+  <p class="input-hint">We'll personalize this entire experience for you.</p>
+  <div class="fancy-input-wrap">
+    <input class="fancy-input" id="input-name" type="text" placeholder="Your first name..." autocomplete="off" autocorrect="off" spellcheck="false" maxlength="40">
+  </div>
+  <button class="btn-next" id="btn-name" onclick="submitName()">
+    Continue
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </button>
+</div>
+
+<!-- SCREEN 2: COMPANY -->
+<div class="screen" id="s-company">
+  <div class="input-eyebrow">Step 2 of 3</div>
+  <h2 class="input-question" id="q-company">And <span class="dynamic">your company?</span></h2>
+  <p class="input-hint" id="hint-company">We'll show exactly how this applies to your business.</p>
+  <div class="fancy-input-wrap">
+    <input class="fancy-input" id="input-company" type="text" placeholder="Company name..." autocomplete="off" autocorrect="off" spellcheck="false" maxlength="50">
+  </div>
+  <button class="btn-next" id="btn-company" onclick="submitCompany()">
+    Show me the future
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </button>
+  <span class="skip-link" onclick="submitCompany(true)">Skip for now</span>
+</div>
+
+<!-- SCREEN 3: PITCH DECK -->
+<div class="screen" id="s-pitch">
+  <div class="deck-nav" id="deck-nav">
+    <span class="deck-logo">BRANTHEO</span>
+    <div class="deck-progress">
+      <div class="deck-dot active" id="dot-0"></div>
+      <div class="deck-dot" id="dot-1"></div>
+      <div class="deck-dot" id="dot-2"></div>
+      <div class="deck-dot" id="dot-3"></div>
+    </div>
+    <button class="deck-exit" onclick="restartFlow()">✕ Restart</button>
+  </div>
+
+  <div class="slides-container" id="slides-container">
+
+    <!-- SLIDE 1: PROBLEM -->
+    <div class="slide slide-1">
+      <div class="slide-eyebrow">The Reality</div>
+      <h2 class="slide-headline" id="s1-headline">
+        <span id="s1-name"></span>, your competitors<br>
+        are <em>already automating.</em>
+      </h2>
+      <p class="slide-body" id="s1-body">
+        While <span class="co-tag" id="s1-co"></span> handles operations manually, AI-powered competitors are generating content, answering leads, and posting on social — 24 hours a day, at no extra cost.
+      </p>
+      <div class="pain-grid">
+        <div class="pain-card">
+          <span class="pain-icon">⏰</span>
+          <h4>No time for content</h4>
+          <p>Blogs, articles, SEO — you know it matters but there's never enough time or budget for a writer.</p>
+        </div>
+        <div class="pain-card">
+          <span class="pain-icon">📣</span>
+          <h4>Inconsistent social</h4>
+          <p>Social media sits idle or off-brand. Meanwhile competitors build authority every single day.</p>
+        </div>
+        <div class="pain-card">
+          <span class="pain-icon">📞</span>
+          <h4>Missed calls = lost revenue</h4>
+          <p>57% of call attempts happen after 7+ days. Conversion drops 8x after just 5 minutes of waiting.</p>
+        </div>
+      </div>
+      <div class="scroll-hint">
+        <span>Scroll to see the solution</span>
+        <div class="scroll-arrow"></div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: PRODUCTS -->
+    <div class="slide slide-2">
+      <div class="products-label">The Solution</div>
+      <h2 class="products-headline">Three AI products.<br>One growth engine.</h2>
+      <p class="products-sub" id="s2-sub">Built to solve exactly what <strong id="s2-co"></strong> faces every day.</p>
+      <div class="product-cards">
+        <div class="product-card">
+          <div class="pc-num">01</div>
+          <div class="pc-body">
+            <div class="pc-name">Content AI</div>
+            <div class="pc-desc">A robot writes SEO-optimized articles and blog posts on a defined schedule — automatically published to your site. Ranks on Google AND gets cited by ChatGPT.</div>
+          </div>
+          <div class="pc-badge">Set & forget</div>
+        </div>
+        <div class="product-card">
+          <div class="pc-num">02</div>
+          <div class="pc-body">
+            <div class="pc-name">Social Automation</div>
+            <div class="pc-desc">On-brand posts to LinkedIn, Instagram & more — written by AI in your tone, built on your visual identity template. Consistent, professional, automatic.</div>
+          </div>
+          <div class="pc-badge">Daily posts</div>
+        </div>
+        <div class="product-card">
+          <div class="pc-num">03</div>
+          <div class="pc-body">
+            <div class="pc-name">AI Talk</div>
+            <div class="pc-desc">An AI voice agent answers every inbound call instantly, speaks 10+ languages, qualifies leads, books meetings into your calendar, and logs everything to your CRM.</div>
+          </div>
+          <div class="pc-badge">24/7 live</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: IMPACT -->
+    <div class="slide slide-3">
+      <div class="impact-label">The Impact</div>
+      <h2 class="impact-headline" id="s3-headline">What changes at<br><span style="color:var(--p)" id="s3-co"></span></h2>
+      <p class="impact-sub" id="s3-sub">Real, measurable results from day one. No fluff — just numbers.</p>
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-val">67%</div>
+          <div class="stat-lbl">More leads from consistent content publishing</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">8x</div>
+          <div class="stat-lbl">Conversion drop avoided by instant call response</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">24/7</div>
+          <div class="stat-lbl">Always-on AI working while your team rests</div>
+        </div>
+      </div>
+      <div class="quote-block">
+        <p id="s3-quote">"Imagine <span class="co-q" id="s3-co-q"></span> publishing 3 SEO articles per week, posting daily on LinkedIn, and answering every lead call in under 5 seconds — all without hiring a single person."</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: CTA / PHONE -->
+    <div class="slide slide-4">
+      <div class="cta-eyebrow">Next Step</div>
+      <h2 class="cta-headline">
+        <span class="name-c" id="s4-name"></span>, ready to<br>
+        see this live?
+      </h2>
+      <p class="cta-sub">Leave your WhatsApp number and we'll send you a personalized PDF deck + a quick voice demo of AI Talk — in the next few minutes.</p>
+      <div class="phone-form">
+        <span class="phone-label">Your WhatsApp / Phone number</span>
+        <input class="phone-input" id="input-phone" type="tel" placeholder="+1 (555) 000-0000" autocomplete="tel">
+        <button class="btn-send" id="btn-send" onclick="submitPhone()">
+          <span id="btn-send-text">Send me the deck 🚀</span>
+        </button>
+        <span class="skip-cta" onclick="goTo('s-success')">I'll look it up myself → brantheo.com</span>
+      </div>
+    </div>
+
+  </div><!-- /slides-container -->
+</div><!-- /s-pitch -->
+
+<!-- SCREEN 4: SUCCESS -->
+<div class="screen" id="s-success">
+  <div class="success-ring"><span class="success-check">✓</span></div>
+  <h2 class="success-headline">You're all set,<br><span id="success-name"></span>!</h2>
+  <p class="success-body" id="success-body">We'll send you the full Brantheo AI Products deck + a personalized note on WhatsApp in the next few minutes.</p>
+  <div class="success-detail">
+    <span class="ico">📱</span>
+    <span>Check your WhatsApp — message from <strong>Bruno Scaravelli @ Brantheo</strong></span>
+  </div>
+  <div class="success-detail">
+    <span class="ico">📄</span>
+    <span>Your deck: <strong id="success-co-deck"></strong> × Brantheo AI</span>
+  </div>
+  <p class="success-brantheo">Brantheo · brantheo.com · Orlando, FL</p>
+</div>
+
+<script>
+/* ── STATE ── */
+const state = { name: '', company: '', phone: '' };
+
+/* ── MAKE WEBHOOK URL ── */
+// Replace with your actual Make.com webhook URL
+const MAKE_WEBHOOK = 'https://hook.us1.make.com/YOUR_WEBHOOK_HERE';
+
+/* ── PARTICLE CANVAS ── */
+(function() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let W, H;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function Particle() {
+    this.reset();
+  }
+  Particle.prototype.reset = function() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.r = Math.random() * 1.2 + 0.2;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.alpha = Math.random() * 0.4 + 0.05;
+    this.color = Math.random() > 0.7 ? '#8300E9' : '#4B41E4';
+  };
+  Particle.prototype.update = function() {
+    this.x += this.vx; this.y += this.vy;
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+  };
+
+  for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    // Draw connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 100) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(131,0,233,${0.06 * (1 - dist/100)})`;
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    // Draw particles
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + Math.round(p.alpha * 255).toString(16).padStart(2,'0');
+      ctx.fill();
+      p.update();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── TRANSITIONS ── */
+function goTo(screenId, fast) {
+  const overlay = document.getElementById('transition-overlay');
+  const dur = fast ? 150 : 350;
+  overlay.style.transition = `transform ${dur}ms cubic-bezier(0.76,0,0.24,1)`;
+  overlay.classList.add('enter');
+  setTimeout(() => {
+    document.querySelectorAll('.screen').forEach(s => { s.classList.remove('active', 'exit'); });
+    const next = document.getElementById(screenId);
+    if (next) next.classList.add('active');
+    overlay.classList.remove('enter');
+    overlay.classList.add('exit');
+    setTimeout(() => overlay.classList.remove('exit'), dur + 50);
+
+    if (screenId === 's-pitch') {
+      document.getElementById('deck-nav').classList.add('visible');
+      document.getElementById('slides-container').scrollTo({ top: 0, behavior: 'instant' });
+      setupScrollObserver();
+    }
+  }, dur + 20);
+}
+
+/* ── INPUT HELPERS ── */
+function setupEnterKey(inputId, handler) {
+  document.getElementById(inputId).addEventListener('keydown', e => {
+    if (e.key === 'Enter') handler();
+  });
+}
+setupEnterKey('input-name', submitName);
+setupEnterKey('input-company', submitCompany);
+setupEnterKey('input-phone', submitPhone);
+
+// Auto-ready button on input
+['input-name','input-company'].forEach(id => {
+  const input = document.getElementById(id);
+  const btnId = id === 'input-name' ? 'btn-name' : 'btn-company';
+  input.addEventListener('input', () => {
+    document.getElementById(btnId).classList.toggle('ready', input.value.trim().length > 0);
+  });
+});
+
+/* ── SUBMIT HANDLERS ── */
+function submitName() {
+  const val = document.getElementById('input-name').value.trim();
+  state.name = val || 'Friend';
+  // Personalize company screen
+  document.getElementById('q-company').innerHTML = `Nice to meet you, <span class="dynamic">${state.name}!</span> Your company?`;
+  document.getElementById('hint-company').textContent = `We'll personalize everything for your business, ${state.name}.`;
+  goTo('s-company');
+  setTimeout(() => document.getElementById('input-company').focus(), 600);
+}
+
+function submitCompany(skip) {
+  const val = document.getElementById('input-company').value.trim();
+  state.company = skip ? 'your company' : (val || 'your company');
+  buildDeck();
+  goTo('s-pitch');
+}
+
+function submitPhone() {
+  const val = document.getElementById('input-phone').value.trim();
+  if (!val || val.length < 7) {
+    document.getElementById('input-phone').style.borderColor = 'rgba(255,80,80,0.6)';
+    document.getElementById('input-phone').focus();
+    setTimeout(() => document.getElementById('input-phone').style.borderColor = '', 2000);
+    return;
+  }
+  state.phone = val;
+
+  // Show loading state
+  const btn = document.getElementById('btn-send');
+  const txt = document.getElementById('btn-send-text');
+  btn.classList.add('loading');
+  txt.textContent = 'Sending…';
+
+  // Fire webhook (fire & forget — don't block UX)
+  fetch(MAKE_WEBHOOK, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: state.name,
+      company: state.company,
+      phone: state.phone,
+      source: 'qr-pitch-deck',
+      timestamp: new Date().toISOString()
+    })
+  }).catch(() => {}); // Silent fail
+
+  // Build success screen
+  document.getElementById('success-name').textContent = state.name;
+  document.getElementById('success-co-deck').textContent = state.company;
+  const bodyTxt = state.phone
+    ? `Check WhatsApp at ${state.phone} — you'll get the full deck in minutes.`
+    : `We'll be in touch at brantheo.com with your personalized deck.`;
+  document.getElementById('success-body').textContent = bodyTxt;
+
+  setTimeout(() => goTo('s-success'), 1400);
+}
+
+function restartFlow() {
+  state.name = ''; state.company = ''; state.phone = '';
+  document.getElementById('input-name').value = '';
+  document.getElementById('input-company').value = '';
+  document.getElementById('input-phone').value = '';
+  document.getElementById('deck-nav').classList.remove('visible');
+  goTo('s-welcome');
+}
+
+/* ── BUILD DECK CONTENT ── */
+function buildDeck() {
+  const n = state.name;
+  const co = state.company;
+  const coDisplay = co === 'your company' ? 'your company' : co;
+
+  // Slide 1
+  document.getElementById('s1-name').textContent = n;
+  document.getElementById('s1-co').textContent = coDisplay;
+
+  // Slide 2
+  document.getElementById('s2-co').textContent = coDisplay;
+
+  // Slide 3
+  document.getElementById('s3-headline').innerHTML = `What changes at<br><span style="color:var(--p)">${coDisplay}</span>`;
+  document.getElementById('s3-co-q').textContent = coDisplay;
+
+  // Slide 4
+  document.getElementById('s4-name').textContent = n;
+
+  // Success
+  document.getElementById('success-name').textContent = n;
+  document.getElementById('success-co-deck').textContent = coDisplay;
+}
+
+/* ── SLIDE SCROLL OBSERVER ── */
+function setupScrollObserver() {
+  const container = document.getElementById('slides-container');
+  const slides = container.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.deck-dot');
+
+  // On slide 4 scroll-into-view, focus phone input
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = [...slides].indexOf(entry.target);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        if (entry.target.classList.contains('slide-4')) {
+          setTimeout(() => document.getElementById('input-phone').focus(), 400);
+        }
+      }
+    });
+  }, { root: container, threshold: 0.6 });
+
+  slides.forEach(s => observer.observe(s));
+}
+
+/* ── AUTO-FOCUS FIRST INPUT ── */
+setTimeout(() => {
+  document.getElementById('input-name').focus();
+}, 100);
+</script>
+</body>
+</html>
