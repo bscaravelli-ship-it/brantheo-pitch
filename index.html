@@ -159,10 +159,10 @@ body::after {
 
 .slides { width:100%; height:100vh; overflow-y:scroll; scroll-snap-type:y mandatory; scroll-behavior:smooth; -webkit-overflow-scrolling:touch; }
 @media(max-width:599px){
-  .slides { scroll-snap-type:y proximity; }
+  .slides { width:100%; height:100vh; overflow-y:scroll; scroll-snap-type:y mandatory; scroll-behavior:smooth; -webkit-overflow-scrolling:touch; }
 }
 .slides::-webkit-scrollbar { display:none; }
-.slide { width:100%; height:100vh; scroll-snap-align:start; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:85px 40px 60px; position:relative; overflow:hidden; }
+.slide { width:100%; height:100vh; scroll-snap-align:start; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:85px clamp(16px,5vw,40px) 60px; position:relative; overflow:hidden; }
 
 /* SLIDE 1 */
 .s1 { background:var(--bg); }
@@ -176,15 +176,15 @@ body::after {
 .sl-p { font-size:clamp(.86rem,1.75vw,1.02rem); color:var(--g); text-align:center; max-width:510px; line-height:1.75; margin-bottom:36px; font-weight:300; }
 .sl-p .co { color:var(--w); font-weight:600; }
 
-.pgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; width:min(740px,100%); margin-bottom:24px; }
+.pgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:min(740px,100%); margin-bottom:24px; }
 .pcard {
   background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:14px; padding:16px 14px;
   transition:border-color .3s,background .3s,transform .3s;
 }
-.pcard:hover { border-color:rgba(131,0,233,.4); background:rgba(131,0,233,.08); transform:translateY(-3px); }
-.pcard-ico { width:34px; height:34px; margin-bottom:10px; }
-.pcard h4 { font-size:.83rem; font-weight:600; margin-bottom:5px; }
-.pcard p { font-size:.75rem; color:rgba(255,255,255,.38); line-height:1.55; font-weight:300; }
+.pcard:hover { border-color:rgba(131,0,233,.4); background:rgba(131,0,233,.08); transform:translateY(-2px); }
+.pcard-ico { width:32px; height:32px; margin-bottom:9px; }
+.pcard h4 { font-size:.8rem; font-weight:600; margin-bottom:4px; }
+.pcard p { font-size:.72rem; color:rgba(255,255,255,.38); line-height:1.55; font-weight:300; }
   .pcard { flex-direction:column; align-items:flex-start; gap:0; }
   .pcard-ico { margin-bottom:10px; }
   .pcard h4 { margin-bottom:5px; }
@@ -198,10 +198,10 @@ body::after {
 .s2 { background:linear-gradient(148deg,var(--ind) 0%,#08041a 100%); }
 .prod-cards { display:flex; flex-direction:column; gap:11px; width:min(630px,100%); }
 .prod-card {
-  display:flex; align-items:center; gap:12px;
+  display:flex; align-items:center; gap:10px;
   background:rgba(255,255,255,.04); border:1px solid rgba(131,0,233,.18);
-  border-radius:20px; padding:14px 16px; transition:all .3s; cursor:default;
-  position:relative; overflow:hidden;
+  border-radius:18px; padding:12px 14px; transition:all .3s; cursor:default;
+  position:relative; overflow:hidden; width:100%;
 }
 .prod-card::before {
   content:''; position:absolute; inset:0;
@@ -210,19 +210,12 @@ body::after {
 }
 .prod-card:hover::before { opacity:1; }
 .prod-card:hover { background:rgba(131,0,233,.1); border-color:rgba(131,0,233,.5); transform:translateX(6px); }
-.pc-num { font-family:'Space Grotesk',sans-serif; font-size:1.5rem; font-weight:700; color:rgba(131,0,233,.24); line-height:1; }
-.pc-ico {
-  width:72px; height:72px; object-fit:contain;
-  filter:drop-shadow(0 4px 14px rgba(131,0,233,0.38));
-  transition:transform .3s, filter .3s;
-}
-.prod-card:hover .pc-ico {
-  transform:scale(1.1) translateY(-2px);
-  filter:drop-shadow(0 6px 22px rgba(131,0,233,0.58));
-}
+.pc-num { font-family:'Space Grotesk',sans-serif; font-size:1.4rem; font-weight:700; color:rgba(131,0,233,.24); line-height:1; min-width:32px; flex-shrink:0; }
+.pc-ico { width:64px; height:64px; object-fit:contain; filter:drop-shadow(0 4px 14px rgba(131,0,233,.38)); transition:transform .3s, filter .3s; flex-shrink:0; }
+.prod-card:hover .pc-ico { width:64px; height:64px; object-fit:contain; filter:drop-shadow(0 4px 14px rgba(131,0,233,.38)); transition:transform .3s, filter .3s; flex-shrink:0; }
 .pc-body { flex:1; }
 .pc-name { font-size:.97rem; font-weight:700; margin-bottom:3px; letter-spacing:-.3px; }
-.pc-desc { font-size:.76rem; color:rgba(255,255,255,.38); line-height:1.5; font-weight:300; }
+.pc-desc { font-size:.74rem; color:rgba(255,255,255,.4); line-height:1.45; font-weight:300; }
 .pc-badge { background:rgba(131,0,233,.2); border:1px solid rgba(131,0,233,.4); color:rgba(255,255,255,.75); padding:3px 9px; border-radius:50px; font-size:.62rem; font-weight:600; white-space:nowrap; align-self:start; margin-top:2px; }
 
 /* SLIDE 3 */
@@ -277,47 +270,6 @@ body::after {
 .scard strong { color:var(--w); }
 .sftr { font-size:.66rem; letter-spacing:2.5px; color:rgba(255,255,255,.15); text-transform:uppercase; margin-top:24px; }
 
-/* ── MOBILE RESPONSIVE ── */
-/* Pain cards: 2 columns on narrow, 3 on wider */
-@media(max-width:480px) {
-  .pgrid { grid-template-columns: 1fr; gap:8px; }
-  .pcard { padding:12px 14px; }
-  
-  /* Product cards: stack icon above text on very narrow */
-  .pc-num { font-size:1.4rem; min-width:28px; }
-  .pc-ico { width:60px; height:60px; }
-  .pc-name { font-size:.9rem; }
-  .pc-desc { font-size:.72rem; }
-  .prod-card { gap:10px; padding:12px 14px; border-radius:16px; }
-  
-  /* Stats: keep 3 cols but tighter */
-  .stats { gap:8px; }
-  .sv { font-size:2rem; }
-  .sl2 { font-size:.68rem; }
-  
-  /* Slides: allow natural height on mobile */
-  .slide { height:auto; min-height:100svh; padding:80px 20px 60px; }
-  .slides { scroll-snap-type:y proximity; }
-  
-  /* Typography */
-  .sl-h { font-size:clamp(1.6rem,7vw,2.4rem); letter-spacing:-1px; }
-  .sl-p { font-size:.85rem; }
-  .cta-eyebrow { font-size:.62rem; }
-  
-  /* Nav logo smaller */
-  .nav-logo svg { height:18px; }
-  
-  /* Welcome screen */
-  .wtitle { font-size:clamp(2.2rem,10vw,3.5rem); }
-  .logo-wrap svg { width:170px; }
-}
-
-@media(min-width:481px) and (max-width:640px) {
-  .pgrid { grid-template-columns: 1fr 1fr; }
-  .slide { height:auto; min-height:100svh; padding:80px 24px 60px; }
-  .slides { scroll-snap-type:y proximity; }
-  .sl-h { font-size:clamp(1.8rem,5vw,2.8rem); }
-}
 
 </style>
 </head>
@@ -435,20 +387,19 @@ body::after {
       <div class="pgrid">
         <div class="pcard">
           <svg class="pcard-ico" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="15" stroke="#8300E9" stroke-width="1.6"/><path d="M20 10v10l5.5 3.5" stroke="#8300E9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div class="pcard-text"><h4>No time for content</h4>
+          <h4>No time for content</h4>
           <p>Blogs, SEO, articles — you know it matters but there's never enough time or budget for a writer.</p>
         </div>
         <div class="pcard">
           <svg class="pcard-ico" viewBox="0 0 40 40" fill="none"><circle cx="11" cy="20" r="3.5" stroke="#8300E9" stroke-width="1.6"/><circle cx="29" cy="10" r="3.5" stroke="#8300E9" stroke-width="1.6"/><circle cx="29" cy="30" r="3.5" stroke="#8300E9" stroke-width="1.6"/><path d="M14.5 18.5l11-6.5M14.5 21.5l11 6.5" stroke="#8300E9" stroke-width="1.6" stroke-linecap="round"/></svg>
-          <div class="pcard-text"><h4>Idle social media</h4>
+          <h4>Idle social media</h4>
           <p>Inconsistent, off-brand posts. Competitors build authority every single day while you stay silent.</p>
         </div>
         <div class="pcard">
           <svg class="pcard-ico" viewBox="0 0 40 40" fill="none"><path d="M15 8h10a2 2 0 0 1 2 2v20a2 2 0 0 1-2 2H15a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" stroke="#8300E9" stroke-width="1.6"/><circle cx="20" cy="27" r="1.5" fill="#8300E9"/><path d="M17 12h6" stroke="#8300E9" stroke-width="1.6" stroke-linecap="round"/><path d="M26 15l-12 6" stroke="#EC4899" stroke-width="1.8" stroke-linecap="round"/><circle cx="27" cy="14" r="5" fill="#060412"/><path d="M25 12l4 4M29 12l-4 4" stroke="#EC4899" stroke-width="1.6" stroke-linecap="round"/></svg>
-          <div class="pcard-text"><h4>Missed calls = lost revenue</h4>
+          <h4>Missed calls = lost revenue</h4>
           <p>57% of call attempts happen after 7+ days. Conversion drops 8x after just 5 minutes with no response.</p>
         </div>
-      </div>
       <div class="cue"><span>Scroll to see the solution</span><div class="arr"></div></div>
     </div>
 
@@ -501,7 +452,6 @@ body::after {
       <div class="quote">
         <p>"Imagine <span class="cq" id="s3cq"></span> publishing 3 SEO articles per week, posting daily on LinkedIn, and answering every lead call in under 5 seconds — without hiring a single person."</p>
       </div>
-    </div>
 
     <!-- SLIDE 4: CTA -->
     <div class="slide s4">
