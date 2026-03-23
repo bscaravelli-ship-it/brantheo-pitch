@@ -158,11 +158,25 @@ body::after {
 .btn-ex:hover { background:rgba(255,255,255,.12); color:var(--w); }
 
 .slides { width:100%; height:100vh; overflow-y:scroll; scroll-snap-type:y mandatory; scroll-behavior:smooth; -webkit-overflow-scrolling:touch; }
+@media(max-width:599px){
+  .slides { scroll-snap-type:y proximity; }
+}
+@media(max-width:599px){
+  .slides { scroll-snap-type:y proximity; }
+}
 .slides::-webkit-scrollbar { display:none; }
 .slide { width:100%; height:100vh; scroll-snap-align:start; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:85px 40px 60px; position:relative; overflow:hidden; }
+@media(max-width:599px){
+  .slide { height:auto; min-height:100svh; overflow:visible; padding-left:18px; padding-right:18px; }
+}
 
 /* SLIDE 1 */
 .s1 { background:var(--bg); }
+@media(max-width:599px){
+  .s1 { padding:80px 18px 50px; justify-content:flex-start; overflow-y:auto; }
+  .sl-h { font-size:clamp(1.5rem,6vw,2.2rem); margin-bottom:12px; }
+  .sl-p { margin-bottom:16px; font-size:.84rem; }
+}
 .sl-ey { font-size:.66rem; letter-spacing:4px; text-transform:uppercase; color:var(--p); font-weight:600; margin-bottom:15px; }
 .sl-h {
   font-family:'Space Grotesk',sans-serif; font-size:clamp(1.85rem,5.8vw,4rem); font-weight:700;
@@ -173,15 +187,24 @@ body::after {
 .sl-p { font-size:clamp(.86rem,1.75vw,1.02rem); color:var(--g); text-align:center; max-width:510px; line-height:1.75; margin-bottom:36px; font-weight:300; }
 .sl-p .co { color:var(--w); font-weight:600; }
 
-.pgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; width:min(740px,100%); margin-bottom:28px; }
+.pgrid { display:flex; flex-direction:column; gap:10px; width:min(740px,100%); margin-bottom:24px; }
 .pcard {
-  background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:18px 15px;
+  background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:14px;
+  padding:14px 16px;
+  display:flex; align-items:center; gap:14px;
   transition:border-color .3s,background .3s,transform .3s;
 }
-.pcard:hover { border-color:rgba(131,0,233,.4); background:rgba(131,0,233,.08); transform:translateY(-3px); }
-.pcard-ico { width:36px; height:36px; margin-bottom:10px; }
-.pcard h4 { font-size:.83rem; font-weight:600; margin-bottom:5px; }
-.pcard p { font-size:.75rem; color:rgba(255,255,255,.38); line-height:1.6; font-weight:300; }
+.pcard:hover { border-color:rgba(131,0,233,.4); background:rgba(131,0,233,.08); transform:translateX(4px); }
+.pcard-ico { width:38px; height:38px; flex-shrink:0; }
+.pcard-text { flex:1; }
+.pcard h4 { font-size:.88rem; font-weight:600; margin-bottom:3px; }
+.pcard p { font-size:.76rem; color:rgba(255,255,255,.38); line-height:1.5; font-weight:300; margin:0; }
+@media(min-width:600px){
+  .pgrid { display:grid; grid-template-columns:repeat(3,1fr); flex-direction:unset; }
+  .pcard { flex-direction:column; align-items:flex-start; gap:0; }
+  .pcard-ico { margin-bottom:10px; }
+  .pcard h4 { margin-bottom:5px; }
+}
 
 .cue { display:flex; flex-direction:column; align-items:center; gap:6px; color:rgba(255,255,255,.22); font-size:.7rem; animation:bob 2.2s ease-in-out infinite; font-weight:300; }
 @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
@@ -189,11 +212,21 @@ body::after {
 
 /* SLIDE 2 */
 .s2 { background:linear-gradient(148deg,var(--ind) 0%,#08041a 100%); }
+@media(max-width:599px){
+  .s2 { padding:80px 18px 50px; justify-content:flex-start; overflow-y:auto; }
+  .prod-card { grid-template-columns: 28px 60px 1fr auto; gap:8px; padding:12px; }
+  .pc-ico { width:60px; height:60px; }
+  .pc-num { font-size:1.2rem; }
+  .pc-name { font-size:.9rem; }
+  .pc-desc { font-size:.72rem; }
+}
 .prod-cards { display:flex; flex-direction:column; gap:11px; width:min(630px,100%); }
 .prod-card {
-  display:flex; align-items:center; gap:16px;
+  display:grid;
+  grid-template-columns: 36px 72px 1fr auto;
+  align-items:center; gap:10px;
   background:rgba(255,255,255,.04); border:1px solid rgba(131,0,233,.18);
-  border-radius:20px; padding:16px 18px 16px 12px; transition:all .3s; cursor:default;
+  border-radius:20px; padding:14px 14px 14px 14px; transition:all .3s; cursor:default;
   position:relative; overflow:hidden;
 }
 .prod-card::before {
@@ -203,23 +236,29 @@ body::after {
 }
 .prod-card:hover::before { opacity:1; }
 .prod-card:hover { background:rgba(131,0,233,.1); border-color:rgba(131,0,233,.5); transform:translateX(6px); }
-.pc-num { font-family:'Space Grotesk',sans-serif; font-size:1.8rem; font-weight:700; color:rgba(131,0,233,.24); line-height:1; min-width:40px; }
+.pc-num { font-family:'Space Grotesk',sans-serif; font-size:1.5rem; font-weight:700; color:rgba(131,0,233,.24); line-height:1; }
 .pc-ico {
-  width:90px; height:90px; flex-shrink:0; object-fit:contain;
-  filter:drop-shadow(0 4px 16px rgba(131,0,233,0.35));
+  width:72px; height:72px; object-fit:contain;
+  filter:drop-shadow(0 4px 14px rgba(131,0,233,0.38));
   transition:transform .3s, filter .3s;
 }
 .prod-card:hover .pc-ico {
-  transform:scale(1.08) translateY(-3px);
-  filter:drop-shadow(0 8px 24px rgba(131,0,233,0.55));
+  transform:scale(1.1) translateY(-2px);
+  filter:drop-shadow(0 6px 22px rgba(131,0,233,0.58));
 }
 .pc-body { flex:1; }
 .pc-name { font-size:.97rem; font-weight:700; margin-bottom:3px; letter-spacing:-.3px; }
 .pc-desc { font-size:.76rem; color:rgba(255,255,255,.38); line-height:1.5; font-weight:300; }
-.pc-badge { background:rgba(131,0,233,.2); border:1px solid rgba(131,0,233,.4); color:rgba(255,255,255,.75); padding:3px 10px; border-radius:50px; font-size:.65rem; font-weight:600; white-space:nowrap; }
+.pc-badge { background:rgba(131,0,233,.2); border:1px solid rgba(131,0,233,.4); color:rgba(255,255,255,.75); padding:3px 9px; border-radius:50px; font-size:.62rem; font-weight:600; white-space:nowrap; align-self:start; margin-top:2px; }
 
 /* SLIDE 3 */
 .s3 { background:var(--bg); }
+@media(max-width:599px){
+  .s3 { padding:80px 18px 50px; }
+  .stats { grid-template-columns: repeat(3,1fr); gap:8px; }
+  .sv { font-size:1.9rem; }
+  .sl2 { font-size:.67rem; }
+}
 .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; width:min(630px,100%); margin-bottom:22px; }
 .stat { background:var(--card); border:1px solid rgba(131,0,233,.17); border-radius:16px; padding:18px 12px; text-align:center; transition:transform .3s; }
 .stat:hover { transform:translateY(-3px); }
@@ -231,6 +270,10 @@ body::after {
 
 /* SLIDE 4 */
 .s4 { background:linear-gradient(148deg,var(--ind) 0%,#08041a 100%); }
+@media(max-width:599px){
+  .s4 { padding:80px 18px 50px; }
+  .sl-h { font-size:clamp(1.5rem,6vw,2.2rem); }
+}
 .ph-form { display:flex; flex-direction:column; align-items:center; gap:10px; width:min(420px,90vw); }
 .ph-lbl { font-size:.72rem; color:rgba(255,255,255,.32); letter-spacing:1px; font-weight:300; }
 .ph-in {
@@ -385,17 +428,17 @@ body::after {
       <div class="pgrid">
         <div class="pcard">
           <svg class="pcard-ico" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="15" stroke="#8300E9" stroke-width="1.6"/><path d="M20 10v10l5.5 3.5" stroke="#8300E9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <h4>No time for content</h4>
+          <div class="pcard-text"><h4>No time for content</h4>
           <p>Blogs, SEO, articles — you know it matters but there's never enough time or budget for a writer.</p>
         </div>
         <div class="pcard">
           <svg class="pcard-ico" viewBox="0 0 40 40" fill="none"><circle cx="11" cy="20" r="3.5" stroke="#8300E9" stroke-width="1.6"/><circle cx="29" cy="10" r="3.5" stroke="#8300E9" stroke-width="1.6"/><circle cx="29" cy="30" r="3.5" stroke="#8300E9" stroke-width="1.6"/><path d="M14.5 18.5l11-6.5M14.5 21.5l11 6.5" stroke="#8300E9" stroke-width="1.6" stroke-linecap="round"/></svg>
-          <h4>Idle social media</h4>
+          <div class="pcard-text"><h4>Idle social media</h4>
           <p>Inconsistent, off-brand posts. Competitors build authority every single day while you stay silent.</p>
         </div>
         <div class="pcard">
           <svg class="pcard-ico" viewBox="0 0 40 40" fill="none"><path d="M15 8h10a2 2 0 0 1 2 2v20a2 2 0 0 1-2 2H15a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" stroke="#8300E9" stroke-width="1.6"/><circle cx="20" cy="27" r="1.5" fill="#8300E9"/><path d="M17 12h6" stroke="#8300E9" stroke-width="1.6" stroke-linecap="round"/><path d="M26 15l-12 6" stroke="#EC4899" stroke-width="1.8" stroke-linecap="round"/><circle cx="27" cy="14" r="5" fill="#060412"/><path d="M25 12l4 4M29 12l-4 4" stroke="#EC4899" stroke-width="1.6" stroke-linecap="round"/></svg>
-          <h4>Missed calls = lost revenue</h4>
+          <div class="pcard-text"><h4>Missed calls = lost revenue</h4>
           <p>57% of call attempts happen after 7+ days. Conversion drops 8x after just 5 minutes with no response.</p>
         </div>
       </div>
