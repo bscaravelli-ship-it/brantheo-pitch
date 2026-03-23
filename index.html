@@ -161,22 +161,11 @@ body::after {
 @media(max-width:599px){
   .slides { scroll-snap-type:y proximity; }
 }
-@media(max-width:599px){
-  .slides { scroll-snap-type:y proximity; }
-}
 .slides::-webkit-scrollbar { display:none; }
 .slide { width:100%; height:100vh; scroll-snap-align:start; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:85px 40px 60px; position:relative; overflow:hidden; }
-@media(max-width:599px){
-  .slide { height:auto; min-height:100svh; overflow:visible; padding-left:18px; padding-right:18px; }
-}
 
 /* SLIDE 1 */
 .s1 { background:var(--bg); }
-@media(max-width:599px){
-  .s1 { padding:80px 18px 50px; justify-content:flex-start; overflow-y:auto; }
-  .sl-h { font-size:clamp(1.5rem,6vw,2.2rem); margin-bottom:12px; }
-  .sl-p { margin-bottom:16px; font-size:.84rem; }
-}
 .sl-ey { font-size:.66rem; letter-spacing:4px; text-transform:uppercase; color:var(--p); font-weight:600; margin-bottom:15px; }
 .sl-h {
   font-family:'Space Grotesk',sans-serif; font-size:clamp(1.85rem,5.8vw,4rem); font-weight:700;
@@ -187,20 +176,15 @@ body::after {
 .sl-p { font-size:clamp(.86rem,1.75vw,1.02rem); color:var(--g); text-align:center; max-width:510px; line-height:1.75; margin-bottom:36px; font-weight:300; }
 .sl-p .co { color:var(--w); font-weight:600; }
 
-.pgrid { display:flex; flex-direction:column; gap:10px; width:min(740px,100%); margin-bottom:24px; }
+.pgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; width:min(740px,100%); margin-bottom:24px; }
 .pcard {
-  background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:14px;
-  padding:14px 16px;
-  display:flex; align-items:center; gap:14px;
+  background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:14px; padding:16px 14px;
   transition:border-color .3s,background .3s,transform .3s;
 }
-.pcard:hover { border-color:rgba(131,0,233,.4); background:rgba(131,0,233,.08); transform:translateX(4px); }
-.pcard-ico { width:38px; height:38px; flex-shrink:0; }
-.pcard-text { flex:1; }
-.pcard h4 { font-size:.88rem; font-weight:600; margin-bottom:3px; }
-.pcard p { font-size:.76rem; color:rgba(255,255,255,.38); line-height:1.5; font-weight:300; margin:0; }
-@media(min-width:600px){
-  .pgrid { display:grid; grid-template-columns:repeat(3,1fr); flex-direction:unset; }
+.pcard:hover { border-color:rgba(131,0,233,.4); background:rgba(131,0,233,.08); transform:translateY(-3px); }
+.pcard-ico { width:34px; height:34px; margin-bottom:10px; }
+.pcard h4 { font-size:.83rem; font-weight:600; margin-bottom:5px; }
+.pcard p { font-size:.75rem; color:rgba(255,255,255,.38); line-height:1.55; font-weight:300; }
   .pcard { flex-direction:column; align-items:flex-start; gap:0; }
   .pcard-ico { margin-bottom:10px; }
   .pcard h4 { margin-bottom:5px; }
@@ -212,21 +196,11 @@ body::after {
 
 /* SLIDE 2 */
 .s2 { background:linear-gradient(148deg,var(--ind) 0%,#08041a 100%); }
-@media(max-width:599px){
-  .s2 { padding:80px 18px 50px; justify-content:flex-start; overflow-y:auto; }
-  .prod-card { grid-template-columns: 28px 60px 1fr auto; gap:8px; padding:12px; }
-  .pc-ico { width:60px; height:60px; }
-  .pc-num { font-size:1.2rem; }
-  .pc-name { font-size:.9rem; }
-  .pc-desc { font-size:.72rem; }
-}
 .prod-cards { display:flex; flex-direction:column; gap:11px; width:min(630px,100%); }
 .prod-card {
-  display:grid;
-  grid-template-columns: 36px 72px 1fr auto;
-  align-items:center; gap:10px;
+  display:flex; align-items:center; gap:12px;
   background:rgba(255,255,255,.04); border:1px solid rgba(131,0,233,.18);
-  border-radius:20px; padding:14px 14px 14px 14px; transition:all .3s; cursor:default;
+  border-radius:20px; padding:14px 16px; transition:all .3s; cursor:default;
   position:relative; overflow:hidden;
 }
 .prod-card::before {
@@ -253,12 +227,6 @@ body::after {
 
 /* SLIDE 3 */
 .s3 { background:var(--bg); }
-@media(max-width:599px){
-  .s3 { padding:80px 18px 50px; }
-  .stats { grid-template-columns: repeat(3,1fr); gap:8px; }
-  .sv { font-size:1.9rem; }
-  .sl2 { font-size:.67rem; }
-}
 .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; width:min(630px,100%); margin-bottom:22px; }
 .stat { background:var(--card); border:1px solid rgba(131,0,233,.17); border-radius:16px; padding:18px 12px; text-align:center; transition:transform .3s; }
 .stat:hover { transform:translateY(-3px); }
@@ -270,10 +238,6 @@ body::after {
 
 /* SLIDE 4 */
 .s4 { background:linear-gradient(148deg,var(--ind) 0%,#08041a 100%); }
-@media(max-width:599px){
-  .s4 { padding:80px 18px 50px; }
-  .sl-h { font-size:clamp(1.5rem,6vw,2.2rem); }
-}
 .ph-form { display:flex; flex-direction:column; align-items:center; gap:10px; width:min(420px,90vw); }
 .ph-lbl { font-size:.72rem; color:rgba(255,255,255,.32); letter-spacing:1px; font-weight:300; }
 .ph-in {
@@ -312,6 +276,49 @@ body::after {
 .scard svg { flex-shrink:0; width:19px; }
 .scard strong { color:var(--w); }
 .sftr { font-size:.66rem; letter-spacing:2.5px; color:rgba(255,255,255,.15); text-transform:uppercase; margin-top:24px; }
+
+/* ── MOBILE RESPONSIVE ── */
+/* Pain cards: 2 columns on narrow, 3 on wider */
+@media(max-width:480px) {
+  .pgrid { grid-template-columns: 1fr; gap:8px; }
+  .pcard { padding:12px 14px; }
+  
+  /* Product cards: stack icon above text on very narrow */
+  .pc-num { font-size:1.4rem; min-width:28px; }
+  .pc-ico { width:60px; height:60px; }
+  .pc-name { font-size:.9rem; }
+  .pc-desc { font-size:.72rem; }
+  .prod-card { gap:10px; padding:12px 14px; border-radius:16px; }
+  
+  /* Stats: keep 3 cols but tighter */
+  .stats { gap:8px; }
+  .sv { font-size:2rem; }
+  .sl2 { font-size:.68rem; }
+  
+  /* Slides: allow natural height on mobile */
+  .slide { height:auto; min-height:100svh; padding:80px 20px 60px; }
+  .slides { scroll-snap-type:y proximity; }
+  
+  /* Typography */
+  .sl-h { font-size:clamp(1.6rem,7vw,2.4rem); letter-spacing:-1px; }
+  .sl-p { font-size:.85rem; }
+  .cta-eyebrow { font-size:.62rem; }
+  
+  /* Nav logo smaller */
+  .nav-logo svg { height:18px; }
+  
+  /* Welcome screen */
+  .wtitle { font-size:clamp(2.2rem,10vw,3.5rem); }
+  .logo-wrap svg { width:170px; }
+}
+
+@media(min-width:481px) and (max-width:640px) {
+  .pgrid { grid-template-columns: 1fr 1fr; }
+  .slide { height:auto; min-height:100svh; padding:80px 24px 60px; }
+  .slides { scroll-snap-type:y proximity; }
+  .sl-h { font-size:clamp(1.8rem,5vw,2.8rem); }
+}
+
 </style>
 </head>
 <body>
