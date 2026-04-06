@@ -431,7 +431,7 @@ function submitPhone(){
   fetch(HOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:S.name,company:S.co,phone:S.ph,source:'qr-business-card',timestamp:new Date().toISOString()})}).catch(()=>{});
   document.getElementById('sn2').textContent=S.name;
   document.getElementById('sco').textContent=S.co;
-  document.getElementById('sb2').textContent=`Check WhatsApp at ${S.ph} — your deck arrives in minutes.`;
+  document.getElementById('sb2').textContent=`Check your phone at ${S.ph} — your deck arrives in minutes.`;
   setTimeout(()=>goTo('ss'),1500);
 }
 function restart(){S.name=S.co=S.ph='';['in-name','in-co','in-ph'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('dn').classList.remove('vis');document.getElementById('btn-snd')?.classList.remove('loading');document.getElementById('bst').textContent='Send me the deck 🚀';goTo('sw');}
