@@ -456,7 +456,7 @@ function submitAll(){
   const qs=new URLSearchParams(location.search);
   const today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York'}).format(new Date());
   const source = qs.get('src') || (today==='2026-11-12' ? 'rotary-2026-11-12' : 'qr-business-card');
-  const body=JSON.stringify({name:S.name,company:S.co,phone:S.ph,source,test:qs.get('test')==='1'?'yes':'no',timestamp:new Date().toISOString()});
+  const body=JSON.stringify({name:S.name,company:S.co,phone:S.ph,source,test:({'1':'yes',nocall:'nocall'})[qs.get('test')]||'no',timestamp:new Date().toISOString()});
   fetch(HOOK,{method:'POST',headers:{'Content-Type':'application/json'},body,keepalive:true}).catch(()=>{});
   buildDeck();
   setTimeout(()=>{goTo('sp');setTimeout(()=>document.getElementById('sent').classList.add('vis'),900);setTimeout(()=>document.getElementById('sent').classList.remove('vis'),7000);},700);
